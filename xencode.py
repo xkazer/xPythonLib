@@ -16,9 +16,7 @@ def encode(data, key):
         
     return strEncode
     
-def decode(data, key):
-    global g_key
-    
+def decode(data, key):    
     strDecode=""
     strData=binascii.a2b_hex(data)
     for c in strData:

@@ -109,7 +109,7 @@ def y_lunar(ly):
     tg = u'甲 乙 丙 丁 戊 己 庚 辛 壬 癸'.split()
     dz = u'子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥'.split()
     sx = u'鼠 牛 虎 免 龙 蛇 马 羊 猴 鸡 狗 猪'.split()
-    return tg[(y - 4) % 10] + dz[(y - 4) % 12] + u' ' + sx[(y - 4) % 12] + u'年'
+    return tg[(y - 4) % 10] + dz[(y - 4) % 12] + u'(' + sx[(y - 4) % 12] + u')年'
  
 def date_diff(tm):
     return (tm - datetime(1901, 1, 1)).days
@@ -198,16 +198,26 @@ def getFileName(path):
     except:
         return path
 
+def getLunarDate(tm):
+    (ly, lm, ld) = get_ludar_date(tm)
+    return y_lunar(ly)+" "+m_lunar(lm)+d_lunar(ld)
+
+def printToday():
+    welcome = datetime.now().strftime("%Y年%m月%d日")
+
+    print "\t"+welcome.decode("utf-8").encode("gb2312"), "-", getLunarDate(datetime.now())
+
+
 def calcDate(dateInfo):
     tm = datetime.strptime(dateInfo, "%Y/%m/%d")
     (ly, lm, ld) = get_ludar_date(tm)
     return (y_lunar(ly), m_lunar(lm), d_lunar(ld))
 
 def printUsage():
-    print "Useage: ", getFileName(sys.argv[0]), "[-h] [-d date]"
+    print "Useage: ", getFileName(sys.argv[0]), "[-h] [-d date] [-t]"
 
 if __name__ == "__main__":
-    opts, args = getopt.getopt(sys.argv[1:], "hd:m")
+    opts, args = getopt.getopt(sys.argv[1:], "hd:mt")
     for op, value in opts:
         if op == "-h":
             printUsage()
@@ -216,3 +226,5 @@ if __name__ == "__main__":
             print y,m,d
         elif op == "-m":
             this_month()
+        elif op == "-t":
+            printToday()
