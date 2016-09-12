@@ -205,7 +205,7 @@ def getLunarDate(tm):
 def printToday():
     welcome = datetime.now().strftime("%Y年%m月%d日")
 
-    print "\t"+welcome.decode("utf-8").encode("gb2312"), "-", getLunarDate(datetime.now())
+    print "\t"+welcome.decode("utf-8").encode("gb2312"), "-", getLunarDate(datetime.now()).encode("gb2312")
 
 
 def calcDate(dateInfo):
