@@ -52,7 +52,14 @@ g_lunar_month = [
     0x30, 0xb0, 0x06, 0x00, 0x50,   #2040
     0x02, 0x07, 0x00, 0x50, 0x03    #2050
 ]
- 
+
+
+g_weekday=u'星期一 星期二 星期三 星期四 星期五 星期六 星期日'.split()
+g_lumonth=u'正月 二月 三月 四月 五月 六月 七月 八月 九月 十月 十一月 十二月'.split()
+g_luday=u'初一 初二 初三 初四 初五 初六 初七 初八 初九 初十\
+        十一 十二 十三 十四 十五 十六 十七 十八 十九 廿十\
+        廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十'.split()
+
 #==================================================================================
 
  
@@ -91,18 +98,25 @@ def this_month():
     show_month(datetime.now())
  
 def week_str(tm):
-    a = u'星期一 星期二 星期三 星期四 星期五 星期六 星期日'.split()
-    return a[tm.weekday()]
+    return g_weekday[tm.weekday()]
  
 def d_lunar(ld):
-    a = u'初一 初二 初三 初四 初五 初六 初七 初八 初九 初十\
-        十一 十二 十三 十四 十五 十六 十七 十八 十九 廿十\
-        廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十'.split()
-    return a[ld - 1]
+    return g_luday[ld - 1]
+
+def find_luDay(day):
+    try:
+        return g_luday.index(day)+1
+    except:
+        return -1
  
 def m_lunar(lm):
-    a = u'正月 二月 三月 四月 五月 六月 七月 八月 九月 十月 十一月 十二月'.split()
-    return a[lm - 1]
+    return g_lumonth[lm - 1]
+
+def find_luMonth(month):
+    try:
+        return g_lumonth.index(month)+1
+    except:
+        return -1
  
 def y_lunar(ly):
     y = ly
