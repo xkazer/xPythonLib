@@ -3,6 +3,9 @@
 import sys, getopt
 import binascii
 
+EncodeMap='EADFCB7410852963'
+DecodeMap=[i for i in range(256)]
+
 def getFileName(path):
     try:
         return path[path.rindex('\\')+1:]
@@ -10,22 +13,40 @@ def getFileName(path):
         return path
 
 def encode(data, key):
-    strEncode=""
-    for c in data:
-        strEncode += binascii.b2a_hex(chr(ord(c)^ord(key[0:1])))
-        
+    byteKey=0
+    strEncode = ""
+    utfStr = data.decode('GBK').encode('UTF-8')
+    #print binascii.b2a_hex(utfStr)
+    for char in key:
+        byteKey ^= ord(char) 
+    for charData in utfStr:
+        chrTmp = ord(charData)^byteKey
+        highData = (chrTmp>>4)&0xF
+        lowData = chrTmp&0xF
+        #print hex(highData), hex(lowData)
+        strEncode = strEncode+EncodeMap[lowData]+EncodeMap[highData]
     return strEncode
-    
-def decode(data, key):    
-    strDecode=""
-    strData=binascii.a2b_hex(data)
-    for c in strData:
-        strDecode += chr(ord(c)^ord(key[0:1]))
-        
-    return strDecode
+
+def decode(data, key):
+    byteKey=0
+    strDecode = ""
+    for i in range(16):
+        DecodeMap[ord(EncodeMap[i])] = i
+
+    for char in key:
+        byteKey ^= ord(char)
+    cur = 0
+    while (cur < len(data)):
+        highData = DecodeMap[ord(data[cur])]
+        lowData = DecodeMap[ord(data[cur+1])]
+        #print hex(highData), hex(lowData)
+        strDecode += chr(((lowData<<4)|highData)^byteKey)
+        cur += 2
+    #print binascii.b2a_hex(strDecode)
+    return strDecode.decode('UTF-8').encode('GBK')
         
 def printUsage():
-    print "Useage: ", getFileName(sys.argv[0]), "[-h] [-f filename]"
+    print "Useage: ", getFileName(sys.argv[0]), "[-h] [-e|d string] [-k key]"
 
 if __name__ == "__main__":
     opts, args = getopt.getopt(sys.argv[1:], "he:d:k:")
