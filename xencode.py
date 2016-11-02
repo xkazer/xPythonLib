@@ -36,7 +36,7 @@ def decode(data, key):
     for char in key:
         byteKey ^= ord(char)
     cur = 0
-    while (cur < len(data)):
+    while (cur < len(data)-1):
         highData = DecodeMap[ord(data[cur])]
         lowData = DecodeMap[ord(data[cur+1])]
         #print hex(highData), hex(lowData)
